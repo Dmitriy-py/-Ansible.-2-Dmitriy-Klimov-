@@ -284,6 +284,7 @@
 ![Снимок экрана (610)](https://github.com/user-attachments/assets/1c25c7a9-73d3-425c-835b-8bfda9cc27fa)
 
 
+![Снимок экрана (618)](https://github.com/user-attachments/assets/4a578cb9-df86-4e39-87ed-a01245f5f034)
 
 
 
