@@ -127,6 +127,45 @@
 
 ## Ответ:
 
+```
+--
+- name: Change MOTD with dynamic information
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Get IP address
+      setup:
+        filter: ansible_default_ipv4
+      delegate_to: localhost  # Get IP of the managed host, not the controller
+      run_once: true
+      register: ip_address_info
+
+    - name: Get hostname
+      shell: hostname
+      register: hostname_output
+      delegate_to: localhost
+      run_once: true
+
+    - name: Set MOTD content
+      copy:
+        dest: /etc/motd
+        content: |
+          #########################################
+          #                                       #
+          #        Welcome to the System!        #
+          #                                       #
+          #########################################
+          Hostname: {{ hostname_output.stdout }}
+          IP Address: {{ ip_address_info.ansible_facts.ansible_default_ipv4.address }}
+          Have a nice day, System Administrator!
+          This system is managed by Ansible.
+          Please be careful!
+        owner: root
+        group: root
+        mode: '0644'
+```
+
 ### Задание 3
 
 **Выполните действия, приложите архив с ролью и вывод выполнения.**
@@ -141,11 +180,96 @@
 4. Открыть порт 80, если необходимо, запустить сервер и добавить его в автозагрузку.
 5. Сделать проверку доступности веб-сайта (ответ 200, модуль uri).
 
-В качестве решения:
-- предоставьте плейбук, использующий роль;
-- разместите архив созданной роли у себя на Google диске и приложите ссылку на роль в своём решении;
-- предоставьте скриншоты выполнения плейбука;
-- предоставьте скриншот браузера, отображающего сконфигурированный index.html в качестве сайта.
+## Ответ:
+
+### cat apache_system_info/tasks/main.yml
+```
+---
+# tasks file for apache_system_info
+- name: Install Apache
+  package:
+    name: "{{ apache_package_name }}"
+    state: present
+
+- name: Open port {{ http_port }} in firewall (Firewalld) - using firewalld
+  firewalld:
+    port: "{{ http_port }}/tcp"
+    permanent: yes
+    state: enabled
+  when: ansible_os_family == "RedHat"
+
+- name: Open port {{ http_port }} in firewall (UFW) - using ufw
+  ufw:
+    rule: allow
+    port: "{{ http_port }}"
+    proto: tcp
+  when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+
+- name: Configure index.html with system info
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart apache
+
+- name: Start and enable Apache service
+  service:
+    name: "{{ apache_service_name }}"
+    state: started
+    enabled: true
+
+- name: Check website availability
+  uri:
+    url: "http://localhost"
+    status_code: 200
+```
+
+### cat apache_playbook.yml
+
+```
+---
+- name: Deploy Apache with system information
+  hosts: all
+  become: true
+
+  roles:
+    - apache_system_info
+  tasks:
+    - name: Debug CPU Model
+      debug:
+        var: ansible_processor
+
+    - name: Debug Total RAM
+      debug:
+        var: ansible_memtotal_mb
+
+    - name: Debug Disk Info
+      debug:
+        var: ansible_devices
+```
+
+### cat apache_system_info/templates/index.html.j2
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <title>System Information</title>
+</head>
+<body>
+  <h1>System Information</h1>
+  <ul>
+    <li><strong>Hostname:</strong> {{ ansible_hostname }}</li>
+    <li><strong>IP Address:</strong> {{ ansible_default_ipv4.address }}</li>
+    <li><strong>CPU Model:</strong> {{ ansible_processor | first }}</li>
+    <li><strong>Total RAM:</strong> {{ ansible_memtotal_mb }} MB</li>
+    <li><strong>First HDD Size:</strong> {{ (ansible_devices[ ansible_devices | first ].size | int / 1024 / 1024) | round(2) }} MB</li>
+  </ul>
+</body>
+</html>
+```
 
 
 
