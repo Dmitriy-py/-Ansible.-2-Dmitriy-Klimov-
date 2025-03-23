@@ -66,6 +66,24 @@
 ```
 ![Снимок экрана (597)](https://github.com/user-attachments/assets/ef74af3d-0724-4540-9612-8e720e93c09e)
 
+```
+---
+- name: Install and configure tuned
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install tuned package
+      package:
+        name: tuned
+        state: present
+
+    - name: Start and enable tuned service
+      systemd:
+        name: tuned
+        state: started
+        enabled: yes
+```
 ![Снимок экрана (598)](https://github.com/user-attachments/assets/d41aa3db-edb6-4740-890f-ade3264133d3)
 
 ![Снимок экрана (599)](https://github.com/user-attachments/assets/2f29dcf7-766a-483a-9dec-2508d7bba5b7)
