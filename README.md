@@ -266,12 +266,13 @@
   <ul>
     <li><strong>Hostname:</strong> {{ ansible_hostname }}</li>
     <li><strong>IP Address:</strong> {{ ansible_default_ipv4.address }}</li>
-    <li><strong>CPU Model:</strong> {{ ansible_processor | first }}</li>
+    <li><strong>CPU Model:</strong> {{ ansible_processor }}</li>
     <li><strong>Total RAM:</strong> {{ ansible_memtotal_mb }} MB</li>
-    <li><strong>First HDD Size:</strong> {{ (ansible_devices[ ansible_devices | first ].size | int / 1024 / 1024) | round(2) }} MB</li>
+    <li><strong>First HDD Size:</strong> {{ ansible_devices.sda.size }} </li>
   </ul>
 </body>
 </html>
+
 ```
 
 ![Снимок экрана (608)](https://github.com/user-attachments/assets/fc3b48e4-11ae-4f3b-a418-a5ff8ea8e33a)
