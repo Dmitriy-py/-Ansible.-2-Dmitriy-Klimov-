@@ -25,7 +25,45 @@
 3. Изменить приветствие системы (motd) при входе на любое другое. Пожалуйста, в этом задании используйте переменную для задания приветствия. Переменную можно задавать любым удобным способом.
 
 # Ответ:
+```
+---
+- name: Download and extract Apache Kafka
+  hosts: all
+  become: true
+  vars:
+    kafka_version: 3.6.1
+    kafka_scala_version: 2.13
+    kafka_download_url: "https://dlcdn.apache.org/kafka/4.0.0/kafka_2.13-4.0.0.tgz"
+    kafka_install_dir: /opt/kafka
+    kafka_archive_name: "kafka_{{ kafka_scala_version }}-{{ kafka_version }}.tgz"
 
+  tasks:
+    - name: Create installation directory
+      file:
+        path: "{{ kafka_install_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Download Kafka archive
+      get_url:
+        url: "{{ kafka_download_url }}"
+        dest: /tmp/{{ kafka_archive_name }}
+        checksum: "sha512:00722ab0a6b954e0006994b8d589dcd8f26e1827c47f70b6e820fb45aa35945c19163b0f188caf0caf976c11f7ab005fd368c54e5851e899d2de687a804a5eb9"  # Added checksum for>
+
+    - name: Extract Kafka archive
+      unarchive:
+        src: /tmp/{{ kafka_archive_name }}
+        dest: "{{ kafka_install_dir }}"
+        remote_src: yes
+        creates: "{{ kafka_install_dir }}/kafka_{{ kafka_scala_version }}-{{ kafka_version }}/LICENSE"  # Check if extraction already happened
+        owner: root
+        group: root
+
+    - name: Clean up downloaded archive
+      file:
+        path: /tmp/{{ kafka_archive_name }}
+        state: absent
+```
 ![Снимок экрана (597)](https://github.com/user-attachments/assets/ef74af3d-0724-4540-9612-8e720e93c09e)
 
 ![Снимок экрана (598)](https://github.com/user-attachments/assets/d41aa3db-edb6-4740-890f-ade3264133d3)
