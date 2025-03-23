@@ -166,6 +166,9 @@
         mode: '0644'
 ```
 
+![Снимок экрана (602)](https://github.com/user-attachments/assets/e3515929-454d-46d0-a221-7b53b2726e9c)
+
+
 ### Задание 3
 
 **Выполните действия, приложите архив с ролью и вывод выполнения.**
@@ -270,6 +273,20 @@
 </body>
 </html>
 ```
+
+![Снимок экрана (608)](https://github.com/user-attachments/assets/fc3b48e4-11ae-4f3b-a418-a5ff8ea8e33a)
+
+
+![Снимок экрана (609)](https://github.com/user-attachments/assets/f5f4397e-6752-432e-8fe3-d51f257b58ec)
+
+
+![Снимок экрана (610)](https://github.com/user-attachments/assets/1c25c7a9-73d3-425c-835b-8bfda9cc27fa)
+
+
+![Снимок экрана (611)](https://github.com/user-attachments/assets/0d488667-6957-41d3-b2dc-e70b2d42938b)
+
+
+![Снимок экрана (607)](https://github.com/user-attachments/assets/ce77c751-146c-47e7-83e2-1860ccb1f1b6)
 
 
 
