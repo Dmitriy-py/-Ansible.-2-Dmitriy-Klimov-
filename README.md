@@ -24,7 +24,7 @@
 2. Установить пакет tuned из стандартного репозитория вашей ОС. Запустить его, как демон — конфигурационный файл systemd появится автоматически при установке. Добавить tuned в автозагрузку.
 3. Изменить приветствие системы (motd) при входе на любое другое. Пожалуйста, в этом задании используйте переменную для задания приветствия. Переменную можно задавать любым удобным способом.
 
-# Ответ:
+## Ответ:
 ```
 ---
 - name: Download and extract Apache Kafka
@@ -88,6 +88,31 @@
 
 ![Снимок экрана (599)](https://github.com/user-attachments/assets/2f29dcf7-766a-483a-9dec-2508d7bba5b7)
 
+```
+---
+- name: Change MOTD
+  hosts: all
+  become: true
+  vars:
+    motd_message: |
+      #########################################
+      #                                       #
+      #        Welcome to the System!        #
+      #                                       #
+      #########################################
+      This system is managed by Ansible.
+      Please be careful!
+
+  tasks:
+    - name: Set MOTD content
+      copy:
+        dest: /etc/motd
+        content: "{{ motd_message }}"
+        owner: root
+        group: root
+        mode: '0644'
+```
+
 ![Снимок экрана (600)](https://github.com/user-attachments/assets/6db5eb50-f07f-43a1-8aaf-3367ca054ca1)
 
 ![Снимок экрана (601)](https://github.com/user-attachments/assets/7e4b73ec-1f2c-4e20-ac55-049abe7fe0ea)
@@ -100,7 +125,7 @@
 
 Модифицируйте плейбук из пункта 3, задания 1. В качестве приветствия он должен установить IP-адрес и hostname управляемого хоста, пожелание хорошего дня системному администратору. 
 
-
+## Ответ:
 
 ### Задание 3
 
